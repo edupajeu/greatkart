@@ -1,6 +1,12 @@
 from django.contrib import admin
 from .models import Category
 
-# Registered my models here.
 
-admin.site.register(Category)
+# Registered my models here.
+class CategoryAdmin(admin.ModelAdmin):
+    # Assigning auto complete from Category Name to Slug
+    prepopulated_fields = {'slug': ('category_name',)}
+    list_display = ('category_name', 'slug')
+
+
+admin.site.register(Category, CategoryAdmin)
