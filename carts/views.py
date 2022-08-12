@@ -61,6 +61,8 @@ def remove_cart_item(request, product_id):
 # Cart structure
 def cart(request, total=0, quantity=0, cart_items=None):
     try:
+        tax = 0
+        grand_total = 0
         cart = Cart.objects.get(cart_id=_cart_id(request))  # Get the cart object
         cart_items = CartItem.objects.filter(cart=cart, is_active=True)  # Activate list of items
         for cart_item in cart_items:  # Iterate cart items inside the cart
