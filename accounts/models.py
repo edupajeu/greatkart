@@ -61,7 +61,7 @@ class Account(AbstractBaseUser):
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
     # Permission to MyAccountManager to manager the Account
-    object = MyAccountManager()
+    objects = MyAccountManager()
 
     def __str__(self):
         return self.email
