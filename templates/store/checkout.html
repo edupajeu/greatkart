@@ -12,7 +12,7 @@
 <div class="card">
     <div class="card-body">
     <h4 class="card-title" mb-4> Billing Address</h4>
-        <form action="#" method="POST">
+        <form action="{% url 'place_order' %}" method="POST">
             {% csrf_token %}
             <div  class="form-row">
                 <div class="col form-group">
@@ -30,7 +30,7 @@
                     <input type="text" class="form-control" name="email" required>
                 </div>
                 <div class="col form-group">
-                    <label for="">Last Name</label>
+                    <label for="">Phone</label>
                     <input type="number" class="form-control" name="phone" required>
                 </div>
             </div>
@@ -54,7 +54,7 @@
                     <input type="text" class="form-control" name="state" >
                 </div>   <div class="col form-group">
                     <label for="">Country</label>
-                    <input type="number" class="form-control" name="country" >
+                    <input type="text" class="form-control" name="country" >
                 </div>
             </div>
             <div class="form-row">
@@ -107,7 +107,7 @@
                         <small class="text-muted"> ${{ cart_item.product.price }} each </small>
                     </div> <!-- price-wrap .// -->
                 </td>
-                <!-- td. Remove entire item button -->
+
             </tr>
 
             {% endfor %}
