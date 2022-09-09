@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from carts.models import CartItem
 from carts.views import _cart_id
+from orders.models import OrderProduct
 from .form import ReviewForm
 from .models import Product, ReviewRating
 from category.models import Category
@@ -42,9 +43,23 @@ def product_detail(request, category_slug, product_slug):  # Get all product det
     except Exception as e:
         raise e
 
+    if request.user.is_authenticated:
+        # Get the order product that validate if the product was purchased
+        try:
+            orderproduct = OrderProduct.objects.filter(user=request.user, product_id=single_product.id).exists()
+        except OrderProduct.DoesNotExist:
+            orderproduct = None
+    else:
+        orderproduct = None
+
+    # Get the reviews
+    reviews = ReviewRating.objects.filter(product=single_product.id, status=True)
+
     context = {
         'single_product': single_product,
         'in_cart': in_cart,
+        'orderproduct': orderproduct,
+        'reviews': reviews,
     }
     return render(request, 'store/product_detail.html', context)
 
@@ -67,13 +82,11 @@ def search(request):
 
 def submit_review(request, product_id):
     url = request.META.get('HTTP_REFERER')  # Get the current URL
-    print('=' *80)
-    print(url)
-    print('=' *80)
     if request.method == 'POST':
         try:
             reviews = ReviewRating.objects.get(user__id=request.user.id, product__id=product_id)  # __ identity FK
-            form = ReviewForm(request.POST, instance=reviews)# 1.Record the form instance. 2.Used to update the instance
+            form = ReviewForm(request.POST,
+                              instance=reviews)  # 1.Record the form instance. 2.Used to update the instance
             form.save()
             messages.success(request, 'Thank you! Your review has been updated.')
             return redirect(url)
